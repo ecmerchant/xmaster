@@ -1,0 +1,31 @@
+<h1>アマゾン‐ヤフオク販売ツール</h1>
+<p>ヤフオクのURLを入力してね</p>
+<br>
+
+<div id="main"></div>
+
+<script type="text/javascript">
+
+var data = [
+  ["","","","",""],
+  ["","","","",""],
+  ["","","","",""]
+];
+
+// handsontableの作成
+var container = document.getElementById('main');
+var hot = new Handsontable(container, {
+    /* オプション */
+    // 表示データ
+    data: data,
+    // 列ヘッダー
+    rowHeaders: true,
+    // 行ヘッダー
+    colHeaders: ["ヤフオク商品URL","商品タイトル","オークションID","現在価格","即決価格"],
+    // 最大行数
+    maxCols: 6,
+    // 最大列数
+    maxRows: 5
+});
+
+</script>
