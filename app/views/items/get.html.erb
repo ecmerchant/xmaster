@@ -1,23 +1,37 @@
 <h1>アマゾン‐ヤフオク販売ツール</h1>
 <p>ヤフオクのURLを入力してね</p>
-<br>
 
+<%= link_to "アカウント管理", accounts_path, :target=>["_blank"] %>
+<br>
+<br>
+<%= form_tag({controller:'items', action:'get'}, remote:true) do %>
+  <%= hidden_field_tag :test1, 'ok' %>
+  <%= submit_tag('送信') %>
+<% end %>
+<br>
+<br>
+<p id="num1"></p>
+<br>
+<%= @test1 %>
+<br>
+<br>
+<button id="done">実行</button>
+<br>
+<br>
 <div id="main"></div>
 
-<script type="text/javascript">
+<script type='text/javascript'>
 
-var data = [
-  ["","","","",""],
-  ["","","","",""],
-  ["","","","",""]
-];
-
-// handsontableの作成
-var container = document.getElementById('main');
-var hot = new Handsontable(container, {
+  var mydata = [
+      ["url1","","","",""],
+      ["url2","","","",""],
+      ["url3","","","",""]
+  ];
+  var container = document.getElementById('main');
+  var handsontable = new Handsontable(container, {
     /* オプション */
     // 表示データ
-    data: data,
+    data: mydata,
     // 列ヘッダー
     rowHeaders: true,
     // 行ヘッダー
@@ -26,6 +40,26 @@ var hot = new Handsontable(container, {
     maxCols: 6,
     // 最大列数
     maxRows: 5
+});
+
+$("#done").click(function () {
+    console.log(handsontable.getData())
+    var myData = {data : handsontable.getData()};
+    myData = JSON.stringify(myData);
+
+    $.ajax({
+        url: "/items/get.js",
+        type: "POST",
+        data: myData,
+        //dataType: 'json',
+        //contentType: 'application/json',
+        success: function (myData) {
+            alert("OK");
+        },
+        error: function (myData) {
+            alert("NG");
+        }
+    });
 });
 
 </script>
