@@ -3,11 +3,13 @@ class ItemsController < ApplicationController
   require 'peddler'
 
   def get
-    #@test1 = "Yes"
-    #@test1 = params[:test1]
+
+    logger.debug("\n<=debug\n")
+    res = params[:data]
+    result = JSON.parse(res)
+    logger.debug(result[0][0])
+    logger.debug("\ndebug=>\n")
     if request.post? then
-      #dat = params[:data]
-      #@test1 = dat
       respond_to do |format|
         format.html
         format.js
