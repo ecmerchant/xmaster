@@ -1,0 +1,52 @@
+
+var maxColnum = 10;
+var maxRownum = 10;
+var mydata = [];
+var colOption = [];
+
+for(var i = 0; i < maxColnum; i++){
+  mydata[i] = "";
+  colOption[i] = {readOnly: false};
+}
+colOption[0] = {readOnly: false};
+/*var mydata = [
+    ["https://page.auctions.yahoo.co.jp/jp/auction/e240280599","title1","id1","p1","p1","",""],
+    ["","title2","id2","p2","p2"],
+    ["","title3","id3","p3","p3"]
+];
+*/
+var container = document.getElementById('main');
+var handsontable = new Handsontable(container, {
+  /* オプション */
+  width: 680,
+  height: 240,
+  data: mydata,
+  rowHeaders: true,
+  colHeaders: ["ヤフオク商品URL","商品タイトル","オークションID","現在価格","即決価格","状態","残り時間","画像1","画像2","画像3"],
+  maxCols: maxColnum,
+  maxRows: maxRownum,
+  manualColumnResize: true,
+  autoColumnSize: false,
+  colWidths:[200,300,150,120,120,120,120,120,120,120],
+  columns: colOption
+});
+
+$("#done").click(function () {
+    var tempData = handsontable.getData();
+    tempData = JSON.stringify(tempData);
+    myData = {data: tempData};
+
+    $.ajax({
+        url: "/items/get",
+        type: "POST",
+        data: myData,
+        dataType: 'json',
+        success: function (myData) {
+          handsontable.loadData(myData);
+        },
+        error: function (myData) {
+          handsontable.loadData(myData);
+          alert("NG");
+        }
+    });
+  });

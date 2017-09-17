@@ -6,11 +6,13 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag    'handsontable', :media => 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag    'handsontable.full', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'handsontable.full', 'data-turbolinks-track': 'reload' %>
+    <%= include_gon %>
   </head>
 
   <body>
     <%= yield %>
+    <%= javascript_include_tag 'items_get', 'data-turbolinks-track': 'reload'  %>
   </body>
 </html>

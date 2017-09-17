@@ -1,3 +1,46 @@
-//$('#result1').text('<%= @res %>');
-//$('#num1').text('OK!!')
-$('#num1').text('<%= @test1 %>')
+var mydata = [
+    ["https://page.auctions.yahoo.co.jp/jp/auction/e240280599","title1","id1","p1","p1"],
+    ["","title2","id2","p2","p2"],
+    ["","title3","id3","p3","p3"]
+];
+var container = document.getElementById('main');
+var handsontable = new Handsontable(container, {
+  /* オプション */
+  // 表示データ
+  data: mydata,
+  // 列ヘッダー
+  rowHeaders: true,
+  // 行ヘッダー
+  colHeaders: ["ヤフオク商品URL","商品タイトル","オークションID","現在価格","即決価格"],
+  // 最大行数
+  maxCols: 6,
+  // 最大列数
+  maxRows: 5,
+  //オプション
+  columns:[
+    {},
+    {readOnly: true},
+    {readOnly: true},
+    {readOnly: true},
+    {readOnly: true}
+  ]
+});
+
+$("#done").click(function () {
+    //var myData = {data : handsontable.getData()};
+    var myData = handsontable.getData();
+    myData = JSON.stringify(myData);
+    myData = {data: myData};
+
+    $.ajax({
+        url: "/items/get.js",
+        type: "POST",
+        data: myData,
+        success: function (myData) {
+          alert('ok');
+        },
+        error: function (myData) {
+          alert("NG");
+        }
+    });
+  });

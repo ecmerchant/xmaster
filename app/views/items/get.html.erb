@@ -4,63 +4,7 @@
 <%= link_to "アカウント管理", accounts_path, :target=>["_blank"] %>
 <br>
 <br>
-<%= form_tag({controller:'items', action:'get'}, remote:true) do %>
-  <%= hidden_field_tag :test1, 'ok' %>
-  <%= submit_tag('送信') %>
-<% end %>
-<br>
-<br>
-<p id="num1"></p>
-<br>
-<%= @test1 %>
-<br>
-<br>
 <button id="done">実行</button>
 <br>
 <br>
 <div id="main"></div>
-
-<script type='text/javascript'>
-
-  var mydata = [
-      ["url1","title1","id1","p1","p1"],
-      ["url2","title2","id2","p2","p2"],
-      ["url3","title3","id3","p3","p3"]
-  ];
-  var container = document.getElementById('main');
-  var handsontable = new Handsontable(container, {
-    /* オプション */
-    // 表示データ
-    data: mydata,
-    // 列ヘッダー
-    rowHeaders: true,
-    // 行ヘッダー
-    colHeaders: ["ヤフオク商品URL","商品タイトル","オークションID","現在価格","即決価格"],
-    // 最大行数
-    maxCols: 6,
-    // 最大列数
-    maxRows: 5
-});
-
-$("#done").click(function () {
-    //var myData = {data : handsontable.getData()};
-    var myData = handsontable.getData();
-    myData = JSON.stringify(myData);
-    myData = {data: myData};
-
-    $.ajax({
-        url: "/items/get.js",
-        type: "POST",
-        data: myData,
-        //dataType: 'json',
-        //contentType: 'application/json',
-        success: function (myData) {
-            alert("OK");
-        },
-        error: function (myData) {
-            alert("NG");
-        }
-    });
-});
-
-</script>

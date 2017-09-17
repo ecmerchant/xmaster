@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   get 'accounts/regist'
   get 'accounts', to: 'accounts#regist'
 
+  root :to =>'items#get'
+
   get 'items/get'
   get 'items', to: 'items#get'
   post 'items/get'
