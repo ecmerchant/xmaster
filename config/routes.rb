@@ -8,6 +8,13 @@ Rails.application.routes.draw do
   get 'items', to: 'items#get'
   post 'items/get'
 
+  post 'items/upload'
+
+  get 'items/set'
+  post 'items/set'
+
+  get 'items/login_check'
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

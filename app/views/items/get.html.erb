@@ -1,10 +1,12 @@
 <h1>アマゾン‐ヤフオク販売ツール</h1>
-<p>ヤフオクのURLを入力してね</p>
-
+<p>ログイン中：<%= @user %></p>
 <%= link_to "アカウント管理", accounts_path, :target=>["_blank"] %>
-<br>
+<%= link_to "パラメータ設定", items_set_path, :target=>["_blank"] %>
 <br>
 <button id="done">実行</button>
+<button id="make-csv">CSV作成</button>
 <br>
 <br>
 <div id="main"></div>
+<p>アップロードCSV</p>
+<div id="csv"></div>

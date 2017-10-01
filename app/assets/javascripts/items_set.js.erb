@@ -1,0 +1,72 @@
+
+var maxColnum = 2;
+var maxRownum = 10;
+var price_data = [];
+var title_data = [];
+var colOption = [];
+
+for(var i=0; i < maxRownum; i++){
+  price_data[i] = [];
+  title_data[i] = [];
+  for(var j=0; j < maxColnum; j++){
+    price_data[i][j] = "";
+    title_data[i][j] = "";
+  }
+  colOption[i] = {readOnly: true};
+}
+colOption[0] = {readOnly: false};
+
+var price_container = document.getElementById('price_table');
+var price_handsontable = Handsontable(price_container, {
+  /* オプション */
+  width: 480,
+  height: 240,
+  data: price_data,
+  rowHeaders: true,
+  colHeaders: ["ヤフオク販売価格","アマゾン販売価格"],
+  maxCols: maxColnum,
+  maxRows: maxRownum,
+  manualColumnResize: true,
+  autoColumnSize: false,
+  colWidths:[200,200]
+});
+
+var title_container = document.getElementById('title_table');
+var title_handsontable = Handsontable(title_container, {
+  /* オプション */
+  width: 480,
+  height: 240,
+  data: title_data,
+  rowHeaders: true,
+  colHeaders: ["置換前","置換後"],
+  maxCols: maxColnum,
+  maxRows: maxRownum,
+  manualColumnResize: true,
+  autoColumnSize: false,
+  colWidths:[200,200]
+});
+
+$("#save").click(function () {
+  var pricedata = price_handsontable.getData();
+  var titledata = title_handsontable.getData();
+
+  var senddata = {price: pricedata, title: titledata};
+  senddata = JSON.stringify(senddata);
+
+  myData = {data: senddata};
+
+  $.ajax({
+    url: "/items/set",
+    type: "POST",
+    data: myData,
+    dataType: 'json',
+    success: function (myData) {
+      alert("OK");
+      //handsontable.loadData(myData);
+    },
+    error: function (myData) {
+      //handsontable.loadData(myData);
+      alert("NG");
+    }
+  });
+});

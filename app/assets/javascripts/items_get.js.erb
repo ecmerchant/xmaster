@@ -1,12 +1,12 @@
 
-var maxColnum = 10;
+var maxColnum = 11;
 var maxRownum = 10;
 var mydata = [];
 var colOption = [];
 
 for(var i=0; i < maxColnum; i++){
+  mydata[i] = [];
   for(var j=0; j < maxRownum; j++){
-    mydata[i] = [];
     mydata[i][j] = "";
   }
   colOption[i] = {readOnly: true};
@@ -16,17 +16,31 @@ colOption[0] = {readOnly: false};
 var container = document.getElementById('main');
 var handsontable = new Handsontable(container, {
   /* オプション */
-  width: 680,
+  width: 980,
   height: 240,
   data: mydata,
   rowHeaders: true,
-  colHeaders: ["ヤフオク商品URL","商品タイトル","オークションID","現在価格","即決価格","状態","残り時間","画像1","画像2","画像3"],
+  colHeaders: ["ヤフオク商品URL","商品タイトル","オークションID","現在価格","即決価格","状態","入札件数","残り時間","画像1","画像2","画像3"],
   maxCols: maxColnum,
   maxRows: maxRownum,
   manualColumnResize: true,
   autoColumnSize: false,
-  colWidths:[200,300,150,120,120,120,120,120,120,120],
+  colWidths:[200,300,150,120,120,120,120,120,120,120,120],
   columns: colOption
+});
+
+var csv_container = document.getElementById('csv');
+var csv_handsontable = new Handsontable(csv_container, {
+  /* オプション */
+  width: 980,
+  height: 240,
+  data: mydata,
+  rowHeaders: true,
+  colHeaders: true,
+  maxRows: maxRownum,
+  manualColumnResize: true,
+  autoColumnSize: false,
+  wordWrap: false
 });
 
 $("#done").click(function () {
@@ -48,3 +62,72 @@ $("#done").click(function () {
     }
   });
 });
+
+
+$("#make-csv").click(function () {
+  var myData = {test: 'data1'};
+  $.ajax({
+    url: "/items/upload",
+    type: "POST",
+    data: myData,
+    dataType: 'json',
+    success: function (myData) {
+      csv_handsontable.loadData(myData);
+      alert("OK");
+    },
+    error: function (myData) {
+      alert("NG");
+    }
+  });
+});
+
+
+/*
+$("#make-csv").click(function () {
+  getCSV(); //最初に実行される
+  var tempData = handsontable.getData();
+  //var tempData =
+  tempData = JSON.stringify(tempData);
+  myData = {data: tempData};
+
+  $.ajax({
+    url: "/items/upload",
+    type: "POST",
+    data: myData,
+    dataType: 'json',
+    success: function (myData) {
+      handsontable.loadData(myData);
+    },
+    error: function (myData) {
+      handsontable.loadData(myData);
+      alert("NG");
+    }
+  });
+});
+*/
+
+//CSVファイルを読み込む関数getCSV()の定義
+function getCSV(){
+    var req = new XMLHttpRequest(); // HTTPでファイルを読み込むためのXMLHttpRrequestオブジェクトを生成
+    req.open("get", "/csv/Flat.File.Toys.jp.csv", true); // アクセスするファイルを指定
+    req.send(null); // HTTPリクエストの発行
+
+    // レスポンスが返ってきたらconvertCSVtoArray()を呼ぶ
+    req.onload = function(){
+      alert(req.responseText);
+      convertCSVtoArray(req.responseText); // 渡されるのは読み込んだCSVデータ
+    }
+}
+
+// 読み込んだCSVデータを二次元配列に変換する関数convertCSVtoArray()の定義
+function convertCSVtoArray(str){ // 読み込んだCSVデータが文字列として渡される
+    var result = []; // 最終的な二次元配列を入れるための配列
+    var tmp = str.split("\n"); // 改行を区切り文字として行を要素とした配列を生成
+
+    // 各行ごとにカンマで区切った文字列を要素とした二次元配列を生成
+    for(var i=0;i<tmp.length;++i){
+        result[i] = tmp[i].split(',');
+    }
+
+    alert(result); // 300yen
+}
