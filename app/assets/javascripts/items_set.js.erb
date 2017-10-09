@@ -9,7 +9,7 @@ for(var i=0; i < maxRownum; i++){
   price_data[i] = [];
   title_data[i] = [];
   for(var j=0; j < maxColnum; j++){
-    price_data[i][j] = "";
+    price_data[i][j] = i*2000;
     title_data[i][j] = "";
   }
   colOption[i] = {readOnly: true};
@@ -45,6 +45,64 @@ var title_handsontable = Handsontable(title_container, {
   autoColumnSize: false,
   colWidths:[200,200]
 });
+
+var int_data =[];
+var rnum = 9;
+for(var i=0; i < rnum; i++){
+  int_data[i] = [];
+  int_data[i][0] = "";
+  int_data[i][1] = "";
+}
+
+int_data[0][0] = "feed_product_type"
+int_data[1][0] = "quantity"
+int_data[2][0] = "recommended_browse_nodes"
+int_data[3][0] = "fulfillment_latency"
+int_data[4][0] = "condition_type"
+int_data[5][0] = "condition_note"
+int_data[6][0] = "standard_price_points"
+
+
+
+var fix_container = document.getElementById('fix_table');
+var fix_handsontable = Handsontable(fix_container, {
+  /* オプション */
+  width: 480,
+  height: 240,
+  data: int_data,
+  rowHeaders: true,
+  colHeaders: ["項目名","値"],
+  maxCols: maxColnum,
+  maxRows: maxRownum,
+  manualColumnResize: true,
+  autoColumnSize: false,
+  colWidths:[200,200]
+});
+
+var brand_data = [];
+for(var i=0; i < 20; i++){
+  brand_data[i] = [];
+  brand_data[i][0] = "";
+  brand_data[i][1] = "";
+  brand_data[i][2] = "";
+}
+
+var brand_container = document.getElementById('brand_table');
+var brand_handsontable = Handsontable(brand_container, {
+  /* オプション */
+  width: 480,
+  height: 240,
+  data: brand_data,
+  rowHeaders: true,
+  colHeaders: ["キーワード","brand_name","generic_keywords"],
+  maxCols: 3,
+  maxRows: maxRownum,
+  manualColumnResize: true,
+  autoColumnSize: false,
+  colWidths:[200,200]
+});
+
+
 
 $("#save").click(function () {
   var pricedata = price_handsontable.getData();

@@ -4,5 +4,6 @@ class ApplicationController < ActionController::Base
   require 'peddler'
   require 'nokogiri'
   require 'open-uri'
+  require 'gon'
 
 end

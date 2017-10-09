@@ -1,2 +1,16 @@
 <h1>アカウント情報の登録</h1>
 <p>アマゾンのMWSアカウント情報を入力</p>
+<br>
+<table>
+  <%= form_for(@account,url:{controller: :accounts,action: :regist}) do |f| %>
+  <tr><th>AWSkey</th>
+    <td><%= f.text_field :AWSkey %></td></tr>
+  <tr><th>skey</th>
+    <td><%= f.text_field :skey %></td></tr>
+  <tr><th>SellerID</th>
+    <td><%= f.text_field :sellerId %></td></tr>
+  <tr><th></th>
+    <td><%= f.submit "保存" %></td></tr>
+
+  <% end %>
+</table>
