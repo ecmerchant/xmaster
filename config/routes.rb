@@ -18,6 +18,9 @@ Rails.application.routes.draw do
   get 'items/set'
   post 'items/set'
 
+  get 'items/set_csv'
+  post 'items/set_csv'
+
   get 'items/login_check'
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'

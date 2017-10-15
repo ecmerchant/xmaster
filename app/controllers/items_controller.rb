@@ -176,9 +176,6 @@ class ItemsController < ApplicationController
   def set
     res = params[:data]
     current_email = current_user.email
-    csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
-    render json: csv_data
-    gon.csv_dd = csv_data
 
     if request.post? then
       @account = Account.new
@@ -213,6 +210,14 @@ class ItemsController < ApplicationController
         @account = Account.new
       end
     end
+  end
+
+  def set_csv
+    res = params[:data]
+    current_email = current_user.email
+    csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
+    render json: csv_data
+    gon.csv_dd = csv_data
   end
 
   def login_check

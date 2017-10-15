@@ -115,7 +115,7 @@ $("#make_csv").click(function () {
   var myData = [];
 
   $.ajax({
-    url: "/items/set",
+    url: "/items/set_csv",
     type: "GET",
     success: function (myData) {
       var header = myData;
