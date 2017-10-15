@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   require 'gon'
 
   rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_url, :alert => exception.message
+    redirect_to "users/sign_in", :alert => exception.message
   end
 
 end
