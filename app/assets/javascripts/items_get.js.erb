@@ -31,6 +31,7 @@ var handsontable = new Handsontable(container, {
 
 var csv_container = document.getElementById('csv');
 var idata = gon.csv_head
+var ini = idata
 
 var csv_handsontable = new Handsontable(csv_container, {
   /* オプション */
@@ -47,12 +48,44 @@ var csv_handsontable = new Handsontable(csv_container, {
 });
 csv_handsontable.alter('insert_row', idata.length,10);
 
+var selected_container = document.getElementById('selected');
+var init = [];
+init[0] = [];
+init[0][0] = "";
+
+var selected_handsontable = new Handsontable(selected_container, {
+  /* オプション */
+  width: 380,
+  height: 60,
+  colWidths: [340],
+  //data: mydata,
+  data: init,
+  colHeaders: ["選択中のセル"],
+  rowHeaders: false,
+  maxRows: 1,
+  manualColumnResize: true,
+  autoColumnSize: true,
+  wordWrap: false
+});
+
+Handsontable.hooks.add('afterSelectionEnd', function() {
+  var data = csv_handsontable.getValue();
+  var res = [];
+  res[0] = [];
+  res[0][0] = data;
+  //res[0][0] = 2;
+  //alert(res);
+  selected_handsontable.loadData(res);
+  selected_handsontable.render();
+  //alert("ok");
+}, csv_handsontable);
+
+
 
 $("#done").click(function () {
   var tempData = handsontable.getData();
   tempData = JSON.stringify(tempData);
   myData = {data: tempData};
-
   $.ajax({
     url: "/items/get",
     type: "POST",
@@ -77,27 +110,46 @@ $("#done").click(function () {
 
 
 $("#make_csv").click(function () {
-  var myData = {test: 'data1'};
-  mydata = JSON.stringify(myData);
-  alert(myData);
+
+  var itemData = handsontable.getData();
+  var myData = [];
+
   $.ajax({
-    url: "/items/set_csv",
-    type: "POST",
-    data: myData,
-    dataType: 'json',
+    url: "/items/set",
+    type: "GET",
     success: function (myData) {
-      alert("OK");
+      var header = myData;
+
+      var headernum = 3;
+      var itemnum = itemData.length;
+
+      for(var i = 0; i < headernum; i++){
+        myData[i] = header[i];
+      }
+
+      if(itemnum != 0){
+        for(var i = 0; i < itemnum; i++){
+          myData[i+headernum] = [];
+          for(var j = 0; j < header[0].length; j++){
+            myData[i+headernum][j] = "";
+          }
+          myData[i+headernum][0] = itemData[i][2];
+        }
+      }
+      csv_handsontable.loadData(myData);
     },
     error: function (myData) {
       alert("NG");
     }
   });
+
+
 });
 
 
 
 $("#csv_upload").click(function () {
-  var tempData = handsontable.getData();
+  var tempData = csv_handsontable.getData();
   tempData = JSON.stringify(tempData);
   myData = {data: tempData};
   $.ajax({
@@ -106,14 +158,7 @@ $("#csv_upload").click(function () {
     data: myData,
     dataType: 'json',
     success: function (myData) {
-      csv_handsontable.loadData(myData);
-      csv_handsontable.updateSettings(
-        {
-          maxRows: maxRownum
-        }
-      );
-
-      alert("OK");
+      alert("OK!");
     },
     error: function (myData) {
       alert("NG");

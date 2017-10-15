@@ -17,9 +17,7 @@ class AccountsController < ApplicationController
             sellerId:data[:sellerId]
           )
         else
-          user.AWSkey = data[:AWSkey]
-          user.skey = data[:skey]
-          user.sellerId = data[:sellerId]
+
         end
       end
     else

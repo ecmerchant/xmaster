@@ -1,14 +1,18 @@
 class ItemsController < ApplicationController
 
   require 'csv'
+  require 'peddler'
   before_action :authenticate_user!, only: :get
+
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to root_url, :alert => exception.message
+  end
 
   def get
     res = params[:data]
     @user = current_user.email
 
     csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
-
     gon.csv_head = csv_data
 
     if res != nil then
@@ -51,11 +55,13 @@ class ItemsController < ApplicationController
               priceType = doc.xpath('//div[@class="Price Price--current"]//dd[@class="Price__value"]')
               if priceType[0] != nil then
                 listPrice = priceType[0].text.gsub("\n","")
+                logger.debug(listPrice)
                 if listPrice.include?("（税 0 円）") == true then
                   listPrice = listPrice.gsub(/（税 0 円）/,"")
                   listPrice = CCur(listPrice)
                 else
-                  listPrice = listPrice.match(/税込([\s\S]*?)円/)
+                  listPrice = listPrice.match(/税込([\s\S]*?)円/)[1]
+                  listPrice = CCur(listPrice)
                 end
               else
                 listPrice = 0
@@ -125,6 +131,7 @@ class ItemsController < ApplicationController
             bitnum = ""
             restTime = ""
             k = 0
+            image = []
             while k < 3
               image[k] = ""
               k += 1
@@ -143,21 +150,35 @@ class ItemsController < ApplicationController
   end
 
   def upload
-    csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
-    render json: csv_data
-  end
+    logger.debug("\n\n\n")
+    logger.debug("Debug Start!")
+    current_email = current_user.email
+    user = Account.find_by(email: current_email)
+    aws = user.AWSkey
+    skey = user.skey
+    seller = user.sellerId
 
-  def set_csv
-    res = params[:data]
-    logger.debug("set_csv")
-    logger.debug(res)
+    client = MWS.sellers(
+      primary_marketplace_id: "A1VC38T7YXB528",
+      merchant_id: seller,
+      aws_access_key_id: aws,
+      aws_secret_access_key: skey
+    )
+
+    parser = client.get_service_status
+    doc = Nokogiri::XML(parser.body)
+    #parser.parse # will return a Hash object
+    logger.debug(doc)
+    res = ["test"]
     render json: res
   end
-
 
   def set
     res = params[:data]
     current_email = current_user.email
+    csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
+    render json: csv_data
+    gon.csv_dd = csv_data
 
     if request.post? then
       @account = Account.new

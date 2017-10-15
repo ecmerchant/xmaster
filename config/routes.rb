@@ -8,13 +8,12 @@ Rails.application.routes.draw do
   get 'items', to: 'items#get'
   post 'items/get'
 
-  post 'items/upload', to: 'items#get'
+  #post 'items/upload', to: 'items#get'
+  post 'items/upload'
 
   post 'accounts/regist'
   get 'accounts/regist'
   patch 'accounts/regist'
-
-  post 'items/set_csv', to: 'items#get'
 
   get 'items/set'
   post 'items/set'
