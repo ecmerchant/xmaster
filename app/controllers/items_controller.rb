@@ -158,17 +158,78 @@ class ItemsController < ApplicationController
     skey = user.skey
     seller = user.sellerId
 
-    client = MWS.sellers(
+    res = params[:data]
+
+    #client = MWS.sellers(
+    #  primary_marketplace_id: "A1VC38T7YXB528",
+    #  merchant_id: seller,
+    #  aws_access_key_id: aws,
+    #  aws_secret_access_key: skey
+    #)
+    client = MWS.feeds(
       primary_marketplace_id: "A1VC38T7YXB528",
       merchant_id: seller,
       aws_access_key_id: aws,
       aws_secret_access_key: skey
     )
 
-    parser = client.get_service_status
+    res1 = JSON.parse(res)
+    #res1 = [["a","b","c"],[1,2,3],["村上","りえ","ネコ"]]
+
+    logger.debug("Pre Feed Content is \n\n")
+    logger.debug(res1)
+
+    kk = 0
+    feed_body = ""
+    while kk < res1.length
+      feed_body = feed_body + res1[kk].join("\t")
+      feed_body = feed_body + "\n"
+      kk += 1
+    end
+
+    #feed_body = "テスト"
+    logger.debug("\n\nFeed Content Enocoding is \n\n")
+    logger.debug(feed_body.encoding)
+
+    new_body = feed_body.encode(Encoding::Windows_31J)
+    logger.debug(new_body.encoding)
+
+    #return
+
+    logger.debug("Feed Content is \n\n")
+    logger.debug(new_body)
+
+    feed_type = "_POST_FLAT_FILE_LISTINGS_DATA_"
+    parser = client.submit_feed(new_body, feed_type)
     doc = Nokogiri::XML(parser.body)
-    #parser.parse # will return a Hash object
+
+    submissionId = doc.xpath(".//mws:FeedSubmissionId", {"mws"=>"http://mws.amazonaws.com/doc/2009-01-01/"}).text
     logger.debug(doc)
+    logger.debug("\n\n")
+
+    process = ""
+    err = 0
+    while process != "_DONE_" do
+      sleep(25)
+      list = {feed_submission_id_list: submissionId}
+      parser = client.get_feed_submission_list(list)
+      doc = Nokogiri::XML(parser.body)
+      process = doc.xpath(".//mws:FeedProcessingStatus", {"mws"=>"http://mws.amazonaws.com/doc/2009-01-01/"}).text
+      logger.debug(doc)
+      err += 1
+      if err > 1 then
+        break
+      end
+    end
+
+
+    parser = client.get_feed_submission_result(submissionId)
+    doc = Nokogiri::XML(parser.body)
+    logger.debug(doc)
+    logger.debug("\n\n")
+    #submissionId = doc.match(/FeedSubmissionId>([\s\S]*?)<\/Feed/)[1]
+    #parser.parse # will return a Hash object
+
     res = ["test"]
     render json: res
   end
