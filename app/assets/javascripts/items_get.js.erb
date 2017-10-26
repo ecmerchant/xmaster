@@ -118,25 +118,81 @@ $("#make_csv").click(function () {
     url: "/items/set_csv",
     type: "GET",
     success: function (myData) {
-      var header = myData;
-
+      var header = csv_handsontable.getData();
       var headernum = 3;
-      var itemnum = itemData.length;
+      var ttime = new Date();
 
-      for(var i = 0; i < headernum; i++){
-        myData[i] = header[i];
+      var mm = (ttime.getMonth()+1).toString(10);
+      var dd = ttime.getDate().toString(10);
+      var hh = ttime.getHours().toString(10);
+      var mi = ttime.getMinutes().toString(10);
+
+      mm = ("0" + mm).slice(-2);
+      dd = ("0" + dd).slice(-2);
+      hh = ("0" + hh).slice(-2);
+      mi = ("0" + mi).slice(-2);
+
+      var chead =  mm + dd + hh + mi;
+
+      for(var k = 0; k < itemData.length; k++){
+        if(itemData[k][0] == ""){
+          var itemnum = k;
+          break;
+        }
       }
+
+      var ptable = myData['price'];
+      var ttable = myData['title'];
+      var ftable = myData['fixed'];
+      var ktable = myData['keyword'];
+
+      var headerhash = {};
+
+      var newdata = [];
+      for(var i = 0; i < headernum; i++){
+        newdata[i] = header[i];
+        if(i == 2){
+          for(var k = 0; k < header[i].length; k++){
+            headerhash[header[i][k]] = k;
+          }
+        }
+      }
+
+      var khash = {};
+      var fhash = {};
+
+      for(var k = 0; k < ftable.length; k++){
+        fhash[ftable[k][0]] = ftable[k][1];
+      }
+
+      for(var k = 0; k < ktable.length; k++){
+        var temp = [];
+        temp[0] = ktable[k][1];
+        temp[1] = ktable[k][2];
+        temp[2] = ktable[k][3];
+        khash[ktable[k][0]] = temp;
+      }
+
 
       if(itemnum != 0){
         for(var i = 0; i < itemnum; i++){
-          myData[i+headernum] = [];
-          for(var j = 0; j < header[0].length; j++){
-            myData[i+headernum][j] = "";
-          }
-          myData[i+headernum][0] = itemData[i][2];
+          newdata[i+headernum] = [];
+          newdata[i+headernum][j] = "";
         }
+
+        
+
+        newdata[i+headernum][headerhash['item_sku']] = itemData[i][2];
+        newdata[i+headernum][headerhash['item_name']] = itemData[i][1];
+        newdata[i+headernum][headerhash['external_product_id_type']] = "EAN";
+        newdata[i+headernum][headerhash['brand_name']] = "EAN";
+        newdata[i+headernum][headerhash['manufacturer']] = "EAN";
+        newdata[i+headernum][headerhash['feed_product_type']] = "EAN";
+        newdata[i+headernum][headerhash['product_description']] = itemData[i][1] + "です。";
+        newdata[i+headernum][headerhash['update_delete']] = "Update";
+
       }
-      csv_handsontable.loadData(myData);
+      csv_handsontable.loadData(newdata);
     },
     error: function (myData) {
       alert("NG");

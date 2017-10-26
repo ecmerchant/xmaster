@@ -235,50 +235,78 @@ class ItemsController < ApplicationController
   end
 
   def set
-    res = params[:data]
-    current_email = current_user.email
 
     if request.post? then
-      @account = Account.new
-      data = params[:account]
-      logger.debug('\n\nDebug')
+      res = params[:data]
+      res = JSON.parse(res)
+      ptable = res['price']
+      ttable = res['title']
+      ftable = res['fixed']
+      keytable = res['keyword']
 
-      logger.debug(data)
-      user = Account.find_by(email: current_email)
-      if data[:AWSkey] != nil && data[:skey] != nil && data[:sellerId] != nil then
-        if user == nil then
-          Account.create(
-            email: current_user.email,
-            AWSkey: data[:AWSkey],
-            skey: data[:skey],
-            sellerId:data[:sellerId]
-          )
-        else
-          user.AWSkey = data[:AWSkey]
-          user.skey = data[:skey]
-          user.sellerId = data[:sellerId]
-        end
+      current_email = current_user.email
+
+      temp = Setting.find_by(email:current_email)
+      logger.debug("Account is search!!\n\n")
+      logger.debug(Setting.select("price"))
+      if temp != nil then
+        logger.debug("Account is found!!!")
+        user = Setting.find_by(email:current_email)
+        user.update(fixed: ftable, keyword: keytable, title: ttable, price: ptable )
+        user.save
+      else
+        user = Setting.create(
+          email: current_user.email,
+          fixed: ftable,
+          keyword: keytable,
+          price: ptable,
+          title: ttable,
+        )
+
       end
     else
-      temp = Account.find_by(email:current_email)
-      logger.debug("Account is search!!\n\n")
-      logger.debug(Account.select("AWSkey"))
+      logger.debug("Access is GET")
+      current_email = current_user.email
+      temp = Setting.find_by(email:current_email)
       if temp != nil then
         logger.debug("Account is found")
-
-        @account = Account.find_by(email:current_email)
+        user = Setting.find_by(email:current_email)
+        pt = user.price
+        kt = user.keyword
+        tt = user.title
+        ft = user.fixed
+        data = {price: pt, title: tt, keyword: kt, fixed: ft}
+        logger.debug(data)
+        gon.udata = data
       else
-        @account = Account.new
+
       end
     end
+    logger.debug(user)
+
   end
 
+
+  #Set CSV data
+
   def set_csv
-    res = params[:data]
+
     current_email = current_user.email
-    csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
-    render json: csv_data
-    gon.csv_dd = csv_data
+
+    temp = Setting.find_by(email:current_email)
+    if temp != nil then
+      logger.debug("Account is found!!!")
+      user = Setting.find_by(email:current_email)
+      ttable = user.title
+      ptable = user.price
+      ftable = user.fixed
+      ktable = user.keyword
+      data = {title: ttable, price: ptable, fixed: ftable, keyword: ktable}
+      logger.debug("OK start")
+      logger.debug(data)
+      render json: data
+    end
+
   end
 
   def login_check
