@@ -15,8 +15,8 @@ Rails.application.routes.draw do
   get 'accounts/regist'
   patch 'accounts/regist'
 
-  get 'items/set'
-  post 'items/set'
+  get 'items/set', to: 'items#set'
+  post 'items/set', to: 'items#set'
 
   get 'items/set_csv'
   post 'items/set_csv'
