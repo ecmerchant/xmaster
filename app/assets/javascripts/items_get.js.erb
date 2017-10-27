@@ -141,6 +141,7 @@ $("#make_csv").click(function () {
         }
       }
 
+
       var ptable = myData['price'];
       var ttable = myData['title'];
       var ftable = myData['fixed'];
@@ -173,26 +174,69 @@ $("#make_csv").click(function () {
         khash[ktable[k][0]] = temp;
       }
 
-
       if(itemnum != 0){
         for(var i = 0; i < itemnum; i++){
           newdata[i+headernum] = [];
-          newdata[i+headernum][j] = "";
+          for(var j = 0; j < header[2].length; j++){
+            newdata[i+headernum][j] = "";
+          }
+
+          var judge = false;
+
+          for(key in khash){
+            var n = itemData[i][1].indexOf(key);
+            if(n > -1){
+              var gh = khash[key];
+              judge = true;
+              break;
+            }
+          }
+
+
+          var price = itemData[i][4];
+
+          if(price == 0){
+            price = itemData[i][3];
+          }
+
+          for(var m = 0; m < ptable.length; m++){
+            if(ptable[m][0] > price){
+              price = ptable[m-1][1] + (ptable[m][1] - ptable[m-1][1])/(ptable[m][0] - ptable[m-1][0]) * (price - ptable[m-1][0]);
+              break;
+            }
+          }
+
+          newdata[i+headernum][headerhash['item_sku']] = itemData[i][2];
+          newdata[i+headernum][headerhash['item_name']] = itemData[i][1];
+          newdata[i+headernum][headerhash['standard_price']] = price;
+          newdata[i+headernum][headerhash['main_image_url']] = itemData[i][8];
+          newdata[i+headernum][headerhash['other_image_url1']] = itemData[i][9];
+          newdata[i+headernum][headerhash['other_image_url2']] = itemData[i][10];
+
+          var tnum = ("000" + i).slice(-3);
+
+          newdata[i+headernum][headerhash['external_product_id']] = chead + tnum;
+          newdata[i+headernum][headerhash['external_product_id_type']] = "EAN";
+
+          for(var t = 0; t < ftable.length; t++){
+            if(ftable[t][0] in headerhash){
+              newdata[i+headernum][headerhash[ftable[t][0]]] = ftable[t][1];
+            }
+          }
+
+          if(judge == true){
+            newdata[i+headernum][headerhash['brand_name']] = gh[0];
+            newdata[i+headernum][headerhash['manufacturer']] = gh[1];
+            newdata[i+headernum][headerhash['recommended_browse_nodes']] = gh[2];
+            newdata[i+headernum][headerhash['generic_keywords']] = gh[3];
+          }
+
+          newdata[i+headernum][headerhash['product_description']] = itemData[i][1] + "です。";
+          newdata[i+headernum][headerhash['update_delete']] = "Update";
         }
-
-        
-
-        newdata[i+headernum][headerhash['item_sku']] = itemData[i][2];
-        newdata[i+headernum][headerhash['item_name']] = itemData[i][1];
-        newdata[i+headernum][headerhash['external_product_id_type']] = "EAN";
-        newdata[i+headernum][headerhash['brand_name']] = "EAN";
-        newdata[i+headernum][headerhash['manufacturer']] = "EAN";
-        newdata[i+headernum][headerhash['feed_product_type']] = "EAN";
-        newdata[i+headernum][headerhash['product_description']] = itemData[i][1] + "です。";
-        newdata[i+headernum][headerhash['update_delete']] = "Update";
-
       }
       csv_handsontable.loadData(newdata);
+      alert("CSV作成");
     },
     error: function (myData) {
       alert("NG");
@@ -214,10 +258,10 @@ $("#csv_upload").click(function () {
     data: myData,
     dataType: 'json',
     success: function (myData) {
-      alert("OK!");
+      alert("アップロードしています");
     },
     error: function (myData) {
-      alert("NG");
+      //alert("NG");
     }
   });
 });

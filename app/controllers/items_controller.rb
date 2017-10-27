@@ -187,12 +187,7 @@ class ItemsController < ApplicationController
       kk += 1
     end
 
-    #feed_body = "テスト"
-    logger.debug("\n\nFeed Content Enocoding is \n\n")
-    logger.debug(feed_body.encoding)
-
     new_body = feed_body.encode(Encoding::Windows_31J)
-    logger.debug(new_body.encoding)
 
     #return
 
@@ -204,8 +199,6 @@ class ItemsController < ApplicationController
     doc = Nokogiri::XML(parser.body)
 
     submissionId = doc.xpath(".//mws:FeedSubmissionId", {"mws"=>"http://mws.amazonaws.com/doc/2009-01-01/"}).text
-    logger.debug(doc)
-    logger.debug("\n\n")
 
     process = ""
     err = 0
