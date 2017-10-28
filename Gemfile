@@ -70,3 +70,4 @@ gem 'rails_admin'
 
 # gem for Bootstrap
 gem 'bootstrap-sass'
+gem 'rails_12factor'
