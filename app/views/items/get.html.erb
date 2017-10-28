@@ -1,16 +1,26 @@
-<h1>アマゾン‐ヤフオク販売ツール</h1>
-<p>ログイン中：<%= @user %></p>
-<%= link_to "アカウント管理", accounts_path, :target=>["_blank"] %>
-<%= link_to "パラメータ設定", "/items/set", :target=>["_blank"] %>
-<%= link_to "管理者専用", "/admin" %>
-<br>
-<br>
-<button id="done">ヤフオク情報取得</button>
-<button id="make_csv">CSV作成</button>
-<button id="csv_upload">アップロード</button>
-<br>
-<br>
-<div id="main"></div>
-<p>アップロードCSV</p>
-<div id="selected"></div>
-<div id="csv"></div>
+<div class="container">
+  <div class="page-header bg-primary">
+    <h1>アマゾン‐ヤフオク販売ツール</h1>
+  </div>
+  <h4><strong>ログイン中：<%= @user %></strong></h4>
+  <%= link_to "MWSアカウント管理", accounts_path, :target=>["_blank"] %>
+  &nbsp;
+  <%= link_to "出品パラメータ設定", "/items/set", :target=>["_blank"] %>
+  &nbsp;
+  <%= link_to "管理者専用", "/admin" %>
+
+
+  <br>
+  <br>
+  <h4><strong>ヤフオクから情報取得</strong></h4>
+  <button id="done" class="btn btn-primary">ヤフオク情報取得</button>
+  <button id="make_csv" class="btn btn-primary">CSV作成</button>
+  <button id="csv_upload" class="btn btn-primary">アップロード</button>
+  <br>
+  <br>
+  <div id="main"></div>
+  <br>
+  <h4><strong>アップロードCSVの確認</strong></h4>
+  <div id="selected"></div>
+  <div id="csv"></div>
+</div>

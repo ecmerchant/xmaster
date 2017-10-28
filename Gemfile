@@ -66,3 +66,7 @@ gem 'amazon-ecs'
 gem 'devise'
 gem 'cancancan'
 gem 'rails_admin'
+
+
+# gem for Bootstrap
+gem 'bootstrap-sass'
