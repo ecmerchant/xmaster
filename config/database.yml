@@ -22,4 +22,7 @@ test:
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  #database: db/production.sqlite3
+  database: json_server_production
+  username: json_server
+  password: <%= ENV['JSON_SERVER_DATABASE_PASSWORD'] %>

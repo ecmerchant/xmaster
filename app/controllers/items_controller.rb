@@ -272,7 +272,36 @@ class ItemsController < ApplicationController
         logger.debug(data)
         gon.udata = data
       else
+        pt = []
+        kt = []
+        tt = []
+        ft = []
 
+        for num in 0..6 do
+          pt[num] = [num * 2000,num * 3000]
+          kt[num] = ["","","","",""]
+          tt[num] = ["",""]
+          ft[num] = []
+        end
+
+        ft[0][0] = "feed_product_type"
+        ft[1][0] = "quantity"
+        ft[2][0] = "recommended_browse_nodes"
+        ft[3][0] = "fulfillment_latency"
+        ft[4][0] = "condition_type"
+        ft[5][0] = "condition_note"
+        ft[6][0] = "merchant_shipping_group_name"
+
+        ft[0][1] = ""
+        ft[1][1] = ""
+        ft[2][1] = ""
+        ft[3][1] = ""
+        ft[4][1] = ""
+        ft[5][1] = ""
+        ft[6][1] = ""
+
+        data = {price: pt, title: tt, keyword: kt, fixed: ft}
+        gon.udata = data
       end
     end
     logger.debug(user)
