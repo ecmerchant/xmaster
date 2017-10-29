@@ -1,6 +1,6 @@
 
 var maxColnum = 2;
-var maxRownum = 10;
+var maxRownum = 100;
 var price_data = [];
 var title_data = [];
 var colOption = [];
@@ -29,6 +29,7 @@ var price_handsontable = Handsontable(price_container, {
   height: 240,
   //data: price_data,
   data: pdata,
+  contextMenu: true,
   rowHeaders: true,
   colHeaders: ["ヤフオク販売価格","アマゾン販売価格"],
   maxCols: maxColnum,
@@ -45,6 +46,7 @@ var title_handsontable = Handsontable(title_container, {
   height: 240,
   //data: title_data,
   data: tdata,
+  contextMenu: true,
   rowHeaders: true,
   colHeaders: ["置換前","置換後"],
   maxCols: maxColnum,
@@ -77,6 +79,7 @@ var fix_handsontable = Handsontable(fix_container, {
   height: 240,
   //data: int_data,
   data: fdata,
+  contextMenu: true,
   rowHeaders: true,
   colHeaders: ["項目名","値"],
   maxCols: maxColnum,
@@ -103,6 +106,7 @@ var brand_handsontable = Handsontable(brand_container, {
   height: 240,
   //data: brand_data,
   data: kdata,
+  contextMenu: true,
   rowHeaders: true,
   colHeaders: ["キーワード","brand_name","manufacturer","recommended_browse_nodes","generic_keywords"],
   maxCols: 5,
@@ -136,7 +140,7 @@ $("#save").click(function () {
     },
     error: function (myData) {
       //handsontable.loadData(myData);
-      alert("NG");
+      //alert("NG");
     }
   });
 });
