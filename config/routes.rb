@@ -23,6 +23,10 @@ Rails.application.routes.draw do
 
   get 'items/login_check'
 
+  get 'items/output'
+  post 'items/output'
+
+
   get 'users/sign_out'
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users

@@ -14,8 +14,14 @@
   <br>
   <h4><strong>ヤフオクから情報取得</strong></h4>
   <button id="done" class="btn btn-primary">ヤフオク情報取得</button>
+  &nbsp;
   <button id="make_csv" class="btn btn-primary">CSV作成</button>
-  <button id="csv_upload" class="btn btn-primary">アップロード</button>
+  &nbsp;
+  <% @tt=Time.now.strftime("_%H%M%S") %>
+  <a href="#" id="csv_output" download="list<%= @tt %>.text" class="btn btn-warning">CSV出力</a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button id="csv_upload" class="btn btn-danger">アップロード</button>
+
   <br>
   <br>
   <div id="main"></div>

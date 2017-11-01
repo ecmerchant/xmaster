@@ -262,9 +262,10 @@ $("#csv_output").click(function () {
     csvdata = csvdata + "\n";
   }
   csvdata = Encoding.convert(csvdata, 'SJIS', 'UTF8');
-
+  alert(csvdata);
   var blob = new Blob([csvdata], { "type" : "text/tsv" });
 
+  alert("ok");
   if (window.navigator.msSaveBlob) {
       window.navigator.msSaveBlob(blob, "list.text");
 

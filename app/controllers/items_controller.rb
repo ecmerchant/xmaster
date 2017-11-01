@@ -308,9 +308,6 @@ class ItemsController < ApplicationController
 
   end
 
-
-  #Set CSV data
-
   def set_csv
 
     current_email = current_user.email
@@ -330,6 +327,13 @@ class ItemsController < ApplicationController
     end
 
   end
+
+  def output
+    res = params[:data]
+    res = JSON.parse(res)
+    send_data(res, filename: "test.csv", type: :csv)
+  end
+
 
   def login_check
     @user = current_user

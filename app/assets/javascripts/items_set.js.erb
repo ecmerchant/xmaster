@@ -57,11 +57,12 @@ var title_handsontable = Handsontable(title_container, {
 });
 
 var int_data =[];
-var rnum = 9;
+var rnum = 100;
 for(var i=0; i < rnum; i++){
   int_data[i] = [];
   int_data[i][0] = "";
   int_data[i][1] = "";
+  int_data[i][2] = "";
 }
 
 int_data[0][0] = "feed_product_type"
@@ -70,7 +71,14 @@ int_data[2][0] = "recommended_browse_nodes"
 int_data[3][0] = "fulfillment_latency"
 int_data[4][0] = "condition_type"
 int_data[5][0] = "condition_note"
-int_data[6][0] = "merchant_shipping_group_name"
+int_data[6][0] = "standard_price_points"
+int_data[0][1] = "商品タイプ"
+int_data[1][1] = "数量"
+int_data[2][1] = "推奨ブラウズノード番号"
+int_data[3][1] = "出荷作業日数"
+int_data[4][1] = "商品のコンディション"
+int_data[5][1] = "商品のコンディション説明"
+int_data[6][1] = "ポイント（販売価格に対するパーセントを記入）"
 
 var fix_container = document.getElementById('fix_table');
 var fix_handsontable = Handsontable(fix_container, {
@@ -81,16 +89,16 @@ var fix_handsontable = Handsontable(fix_container, {
   data: fdata,
   contextMenu: true,
   rowHeaders: true,
-  colHeaders: ["項目名","値"],
-  maxCols: maxColnum,
+  colHeaders: ["項目名","説明","値"],
+  maxCols: 3,
   maxRows: maxRownum,
   manualColumnResize: true,
   autoColumnSize: true,
-  colWidths:[200,200]
+  colWidths:[200,200,200]
 });
 
 var brand_data = [];
-for(var i=0; i < 20; i++){
+for(var i=0; i < 100; i++){
   brand_data[i] = [];
   brand_data[i][0] = "";
   brand_data[i][1] = "";
@@ -108,7 +116,7 @@ var brand_handsontable = Handsontable(brand_container, {
   data: kdata,
   contextMenu: true,
   rowHeaders: true,
-  colHeaders: ["キーワード","brand_name","manufacturer","recommended_browse_nodes","generic_keywords"],
+  colHeaders: ["キーワード","brand_name（ブランド名）","manufacturer（メーカ名）","recommended_browse_nodes（推奨ブラウズノード）","generic_keywords（検索キーワード）"],
   maxCols: 5,
   maxRows: maxRownum,
   manualColumnResize: true,
@@ -135,11 +143,12 @@ $("#save").click(function () {
     data: myData,
     dataType: 'json',
     success: function (myData) {
-      alert("OK");
+      alert("保存しました");
       //handsontable.loadData(myData);
     },
     error: function (myData) {
       //handsontable.loadData(myData);
+      alert("保存しました");
       //alert("NG");
     }
   });
