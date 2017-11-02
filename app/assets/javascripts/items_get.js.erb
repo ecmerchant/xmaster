@@ -186,15 +186,16 @@ $("#make_csv").click(function () {
 
           var judge = false;
           var n = 0;
+          var ch = [];
 
           for(key in khash){
             var indv = key.split(" ")
             for(var y = 0; y < indv.length; y++){
-              n = n + itemData[i][1].indexOf(key);
-
+              ch[y] = itemData[i][1].indexOf(indv[y]);
             }
+
             //var n = itemData[i][1].indexOf(key);
-            if(n > -1){
+            if(Math.min.apply(null,ch) > 0){
               var gh = khash[key];
               judge = true;
               break;
