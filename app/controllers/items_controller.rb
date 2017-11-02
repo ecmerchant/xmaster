@@ -12,6 +12,18 @@ class ItemsController < ApplicationController
     res = params[:data]
     @user = current_user.email
 
+    current_email = current_user.email
+    temp = Setting.find_by(email:current_email)
+    if temp == nil then
+      Setting.create(
+        email: current_user.email,
+        fixed: "",
+        keyword: "",
+        price: "",
+        title: ""
+      )
+    end
+
     csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
     gon.csv_head = csv_data
 
