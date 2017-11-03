@@ -18,7 +18,7 @@
   <button id="make_csv" class="btn btn-primary">CSV作成</button>
   &nbsp;
   <% @tt=Time.now.strftime("_%H%M%S") %>
-  <a href="#" id="csv_output" download="list<%= @tt %>.text" class="btn btn-warning">CSV出力</a>
+  <a href="#" id="csv_output" download="list<%= @tt %>.txt" class="btn btn-warning">CSV出力</a>
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <button id="csv_upload" class="btn btn-danger">アップロード</button>
   <br>
