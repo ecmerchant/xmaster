@@ -1,12 +1,12 @@
 
 var maxColnum = 11;
-var maxRownum = 100;
+var maxRownum = 300;
 var mydata = [];
 var colOption = [];
 
-for(var i=0; i < maxColnum; i++){
+for(var i=0; i < maxRownum; i++){
   mydata[i] = [];
-  for(var j=0; j < maxRownum; j++){
+  for(var j=0; j < maxColnum; j++){
     mydata[i][j] = "";
   }
   colOption[i] = {readOnly: false};
