@@ -9,20 +9,17 @@ class ItemsController < ApplicationController
   end
 
   def get
+
     res = params[:data]
     @user = current_user.email
 
     current_email = current_user.email
     temp = Setting.find_by(email:current_email)
-    if temp == nil then
-      Setting.create(
-        email: current_user.email,
-        fixed: "",
-        keyword: "",
-        price: "",
-        title: ""
-      )
-    end
+    #if temp == nil then
+    #  Setting.create(
+    #    email: current_user.email
+    #  )
+    #end
 
     csv_data = CSV.read('app/others/csv/Flat.File.Toys.jp.csv', headers: true)
     gon.csv_head = csv_data
@@ -113,13 +110,14 @@ class ItemsController < ApplicationController
               #オークションが終了している場合
               logger.debug(i)
               title = doc.xpath('//h1[@property="auction:Title"]')[0].text
+              title = "[終了したオークション]" + title
               auctionID = doc.xpath('//td[@property="auction:AuctionID"]')[0].text
               condition = doc.xpath('//td[@property="auction:ItemStatus"]')[0].text
               binPrice = ""
               checkTax = doc.xpath('//p[@class="decTxtTaxIncPrice"]')[0].text
 
-              if checkTax != "税0円" then
-                listPrice = doc.xpath('//p[@property="auction:Price"]')[0].text
+              if checkTax.index("税0円") != nil then
+                listPrice = doc.xpath('//p[@class="decTxtBuyPrice"]')[0].text
                 listPrice = CCur(listPrice)
               else
                 listPrice = doc.xpath('//p[@class="decTxtTaxIncPrice"]')[0].text
@@ -289,12 +287,14 @@ class ItemsController < ApplicationController
         tt = []
         ft = []
 
-        for num in 0..6 do
+        for num in 0..99 do
           pt[num] = [num * 2000,num * 3000]
           kt[num] = ["","","","",""]
           tt[num] = ["",""]
-          ft[num] = []
+          ft[num] = ["","",""]
         end
+
+        rnum = 100;
 
         ft[0][0] = "feed_product_type"
         ft[1][0] = "quantity"
@@ -302,15 +302,14 @@ class ItemsController < ApplicationController
         ft[3][0] = "fulfillment_latency"
         ft[4][0] = "condition_type"
         ft[5][0] = "condition_note"
-        ft[6][0] = "merchant_shipping_group_name"
-
-        ft[0][1] = ""
-        ft[1][1] = ""
-        ft[2][1] = ""
-        ft[3][1] = ""
-        ft[4][1] = ""
-        ft[5][1] = ""
-        ft[6][1] = ""
+        ft[6][0] = "standard_price_points"
+        ft[0][1] = "商品タイプ"
+        ft[1][1] = "数量"
+        ft[2][1] = "推奨ブラウズノード番号"
+        ft[3][1] = "出荷作業日数"
+        ft[4][1] = "商品のコンディション"
+        ft[5][1] = "商品のコンディション説明"
+        ft[6][1] = "ポイント（販売価格に対するパーセントを記入）"
 
         data = {price: pt, title: tt, keyword: kt, fixed: ft}
         gon.udata = data
@@ -335,6 +334,9 @@ class ItemsController < ApplicationController
       data = {title: ttable, price: ptable, fixed: ftable, keyword: ktable}
       logger.debug("OK start")
       logger.debug(data)
+      render json: data
+    else
+      data = {fixed: ["none"]}
       render json: data
     end
 

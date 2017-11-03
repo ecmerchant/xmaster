@@ -13,7 +13,6 @@ for(var i=0; i < maxRownum; i++){
 }
 colOption[0] = {readOnly: false};
 
-
 var container = document.getElementById('main');
 var handsontable = new Handsontable(container, {
   /* オプション */
@@ -145,12 +144,6 @@ $("#make_csv").click(function () {
         }
       }
 
-      var ftable = myData['fixed'];
-
-      if(ftable == "none"){
-        alert("はじめにパラメータを設定して下さい");
-        return;
-      }
 
       var ptable = myData['price'];
       var ttable = myData['title'];

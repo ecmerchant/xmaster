@@ -145,12 +145,6 @@ $("#make_csv").click(function () {
         }
       }
 
-      var ftable = myData['fixed'];
-
-      if(ftable == "none"){
-        alert("はじめにパラメータを設定して下さい");
-        return;
-      }
 
       var ptable = myData['price'];
       var ttable = myData['title'];
