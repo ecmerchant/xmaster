@@ -9,9 +9,9 @@ for(var i = 0; i < maxRownum; i++){
   for(var j = 0; j < maxColnum; j++){
     mydata[i][j] = "";
   }
-  //colOption[i] = {readOnly: false};
+  colOption[i] = {readOnly: false};
 }
-//colOption[0] = {readOnly: false};
+colOption[0] = {readOnly: false};
 
 
 var container = document.getElementById('main');
@@ -27,8 +27,8 @@ var handsontable = new Handsontable(container, {
   maxRows: maxRownum,
   manualColumnResize: true,
   autoColumnSize: false,
-  colWidths:[200,300,150,120,120,120,120,120,120,120,120]
-  //columns: colOption
+  colWidths:[200,300,150,120,120,120,120,120,120,120,120],
+  columns: colOption
 });
 
 var csv_container = document.getElementById('csv');
@@ -86,58 +86,51 @@ Handsontable.hooks.add('afterSelectionEnd', function() {
 
 $("#done").click(function () {
   var orgData = handsontable.getData();
+  var tempData = JSON.stringify(orgData);
+  tempData = {data: tempData};
   var urlnum = 0;
-  var pbar = document.getElementById('progressbar');
-  pbar.style.width = "0%";
   while(orgData[urlnum][0] != ""){
     urlnum++;
   }
   var counter = 0;
-  alert("データ取得開始");
-  repajax(counter,urlnum);
+  alert("データ取得中");
+
+  while(counter < urlnum){
+    var sendData = [orgData, counter];
+
+    sendData = JSON.stringify(sendData);
+    sendData = {data: sendData};
+
+    $.ajax({
+      url: "/items/get",
+      type: "POST",
+      //data: tempData,
+      data: sendData,
+      dataType: 'json',
+      success: function (myData) {
+        handsontable.loadData(myData);
+        handsontable.updateSettings(
+          {maxCols: maxColnum}
+        );
+        var result = true;
+        alert("ok");
+
+      },
+      error: function (myData) {
+        //handsontable.loadData(myData);
+        var result = false;
+        alert("NG");
+      }
+    });
+    if(result == false){
+      break;
+    }
+    orgData = handsontable.getData();
+    counter = counter + 10;
+  }
 
 });
 
-function repajax(counter,urlnum){
-
-  var orgData = handsontable.getData();
-  var tempData = JSON.stringify(orgData);
-  tempData = {data: tempData};
-  var pbar = document.getElementById('progressbar');
-  var sendData = [orgData, counter];
-  sendData = JSON.stringify(sendData);
-  sendData = {data: sendData};
-  $.ajax({
-    url: "/items/get",
-    async: true,
-    type: "POST",
-    //data: tempData,
-    data: sendData,
-    dataType: 'json',
-    success: function (myData) {
-      handsontable.loadData(myData);
-      orgData = handsontable.getData();
-      counter = counter + 10;
-      if(counter > urlnum){
-        counter = urlnum;
-        var parcent = Math.round(counter / urlnum * 100);
-        pbar.style.width = parcent + "%";
-        var result = true;
-        alert("取得完了!");
-        return;
-      }else{
-        var parcent = Math.round(counter / urlnum * 100);
-        pbar.style.width = parcent + "%";
-        var result = true;
-        repajax(counter,urlnum);
-      }
-    },
-    error: function (myData) {
-      var result = false;
-      alert("NG");
-    }
-  });
-}
 
 $("#make_csv").click(function () {
 
