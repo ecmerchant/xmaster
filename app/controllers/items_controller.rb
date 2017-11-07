@@ -90,7 +90,9 @@ class ItemsController < ApplicationController
                     binPrice = binPrice.gsub(/（税 0 円）/,"")
                     binPrice = CCur(binPrice)
                   else
-                    binPrice = binPrice.match(/税込([\s\S]*?)円/)
+                    binPrice = binPrice.match(/税込([\s\S]*?)円/)[0]
+                    binPrice = binPrice.gsub(/税込/,"")
+                    binPrice = CCur(binPrice)
                   end
                 else
                   binPrice = 0
@@ -156,7 +158,7 @@ class ItemsController < ApplicationController
             end
 
             res[i] = [url,title,auctionID,listPrice,binPrice,condition,bitnum,restTime,image[0],image[1],image[2]]
-            
+
             process += 1
             if process > maxnum - 1 then
               break
