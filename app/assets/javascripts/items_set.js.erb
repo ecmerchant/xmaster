@@ -15,7 +15,8 @@ for(var i=0; i < maxRownum; i++){
   price_data[i] = [];
   title_data[i] = [];
   for(var j=0; j < maxColnum; j++){
-    price_data[i][j] = i*2000;
+    price_data[i][0] = i*500;
+    price_data[i][1] = 2980 + i*500;
     title_data[i][j] = "";
   }
   colOption[i] = {readOnly: true};

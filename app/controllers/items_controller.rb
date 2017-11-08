@@ -302,7 +302,7 @@ class ItemsController < ApplicationController
         ft = []
 
         for num in 0..99 do
-          pt[num] = [num * 2000,num * 3000]
+          pt[num] = [num * 500,2980+num * 500]
           kt[num] = ["","","","",""]
           tt[num] = ["",""]
           ft[num] = ["","",""]
