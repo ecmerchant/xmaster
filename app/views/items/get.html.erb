@@ -7,8 +7,9 @@
   &nbsp;
   <%= link_to "出品パラメータ設定", "/items/set", :target=>["_blank"] %>
   &nbsp;
+  <%= link_to 'ログアウト', destroy_user_session_path, method: :get %>
+  &nbsp;&nbsp;
   <%= link_to "管理者専用", "/admin" %>
-
 
   <br>
   <br>

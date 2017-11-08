@@ -26,8 +26,10 @@ Rails.application.routes.draw do
   get 'items/output'
   post 'items/output'
 
+  devise_scope :user do
+    get '/users/sign_out' => 'devise/sessions#destroy'
+  end
 
-  get 'users/sign_out'
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   devise_for :users
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
