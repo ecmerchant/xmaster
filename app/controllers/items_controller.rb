@@ -292,6 +292,14 @@ class ItemsController < ApplicationController
         kt = user.keyword
         tt = user.title
         ft = user.fixed
+        if pt.length < 500 then
+          for num in pt.length..500 do
+            pt[num] = [num * 500,2980+num * 500]
+            kt[num] = ["","","","",""]
+            tt[num] = ["",""]
+            ft[num] = ["","",""]
+          end
+        end
         data = {price: pt, title: tt, keyword: kt, fixed: ft}
         logger.debug(data)
         gon.udata = data
@@ -301,7 +309,7 @@ class ItemsController < ApplicationController
         tt = []
         ft = []
 
-        for num in 0..99 do
+        for num in 0..500 do
           pt[num] = [num * 500,2980+num * 500]
           kt[num] = ["","","","",""]
           tt[num] = ["",""]
