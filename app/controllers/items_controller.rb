@@ -71,7 +71,7 @@ class ItemsController < ApplicationController
                 priceType = doc.xpath('//div[@class="Price Price--current"]//dd[@class="Price__value"]')
                 if priceType[0] != nil then
                   listPrice = priceType[0].text.gsub("\n","")
-                  logger.debug(listPrice)
+
                   if listPrice.include?("（税 0 円）") == true then
                     listPrice = listPrice.gsub(/（税 0 円）/,"")
                     listPrice = CCur(listPrice)
@@ -117,25 +117,37 @@ class ItemsController < ApplicationController
 
               else
                 #オークションが終了している場合
-                logger.debug(i)
+
                 title = doc.xpath('//h1[@property="auction:Title"]')[0].text
                 title = "[終了したオークション]" + title
                 auctionID = doc.xpath('//td[@property="auction:AuctionID"]')[0].text
                 condition = doc.xpath('//td[@property="auction:ItemStatus"]')[0].text
                 binPrice = ""
                 checkTax = doc.xpath('//p[@class="decTxtTaxIncPrice"]')[0].text
-
+                logger.debug(url)
                 if checkTax.index("税0円") != nil then
-                  listPrice = doc.xpath('//p[@class="decTxtBuyPrice"]')[0].text
+
+                  listPrice = doc.xpath('//p[@class="decTxtBuyPrice"]')[0]
+                  if listPrice != nil then
+                    listPrice = doc.xpath('//p[@class="decTxtBuyPrice"]')[0].text
+                  else
+                    listPrice = doc.xpath('//p[@class="decTxtAucPrice"]')[0].text
+                  end
                   listPrice = CCur(listPrice)
                 else
-                  listPrice = doc.xpath('//p[@class="decTxtTaxIncPrice"]')[0].text
+                  listPrice = doc.xpath('//p[@class="decTxtBuyPrice"]')[0]
+                  if listPrice != nil then
+                    listPrice = doc.xpath('//p[@class="decTxtBuyPrice"]')[0].text
+                  else
+                    listPrice = doc.xpath('//p[@class="decTxtAucPrice"]')[0].text
+                  end
                   listPrice = CCur(listPrice)
                 end
-
+                binPrice = 0
                 bitnum = doc.xpath('//b[@property="auction:Bids"]')[0].text
                 restTime = "終了"
                 k = 0
+                image = []
                 while k < 3
                   image[k] = ""
                   k += 1
