@@ -15,12 +15,16 @@ for(var i=0; i < maxRownum; i++){
   price_data[i] = [];
   title_data[i] = [];
   for(var j=0; j < maxColnum; j++){
-    price_data[i][0] = i*500;
-    price_data[i][1] = 2980 + i*500;
+    price_data[i][0] = "";
+    price_data[i][1] = "";
     title_data[i][j] = "";
   }
   colOption[i] = {readOnly: true};
 }
+
+price_data[0][0] = 0;
+price_data[0][1] = 0;
+
 colOption[0] = {readOnly: false};
 
 var price_container = document.getElementById('price_table');
