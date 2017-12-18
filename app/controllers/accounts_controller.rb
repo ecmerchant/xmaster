@@ -28,6 +28,7 @@ class AccountsController < ApplicationController
       end
     else
       temp = Account.find_by(email:current_email)
+      data = params[:account]
       logger.debug("Account is search!!\n\n")
       logger.debug(Account.select("AWSkey"))
       if temp != nil then
@@ -37,7 +38,15 @@ class AccountsController < ApplicationController
         @res2 = temp.skey
         @res3 = temp.sellerId
       else
-        @account = Account.new
+        @account = Account.create(
+          email: current_user.email,
+          AWSkey: data[:AWSkey],
+          skey: data[:skey],
+          sellerId:data[:sellerId]
+        )
+        @res1 = temp.AWSkey
+        @res2 = temp.skey
+        @res3 = temp.sellerId
       end
     end
   end
