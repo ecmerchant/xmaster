@@ -38,15 +38,27 @@ class AccountsController < ApplicationController
         @res2 = temp.skey
         @res3 = temp.sellerId
       else
-        @account = Account.create(
-          email: current_user.email,
-          AWSkey: data[:AWSkey],
-          skey: data[:skey],
-          sellerId:data[:sellerId]
-        )
-        @res1 = temp.AWSkey
-        @res2 = temp.skey
-        @res3 = temp.sellerId
+        if data != nil then
+          @account = Account.create(
+            email: current_user.email,
+            AWSkey: data[:AWSkey],
+            skey: data[:skey],
+            sellerId:data[:sellerId]
+          )
+          @res1 = temp.AWSkey
+          @res2 = temp.skey
+          @res3 = temp.sellerId
+        else
+          @account = Account.create(
+            email: current_user.email,
+            AWSkey: "",
+            skey: "",
+            sellerId:""
+          )
+          @res1 = @account.AWSkey
+          @res2 = @account.skey
+          @res3 = @account.sellerId
+        end
       end
     end
   end
