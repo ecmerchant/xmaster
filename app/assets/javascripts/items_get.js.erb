@@ -258,8 +258,13 @@ $("#make_csv").click(function () {
           for(var m = 0; m < ttable.length; m++){
             if(ttable[m][0] != ""){
               while (newname.indexOf(ttable[m][0]) >= 0) {
-                newname = newname.replace(ttable[m][0],ttable[m][1]);
-                newname = newname.trim();
+                if(ttable[m][1] != "space"){
+                  newname = newname.replace(ttable[m][0],ttable[m][1]);
+                  newname = newname.trim();
+                }else{
+                  newname = newname.replace(ttable[m][0]," ");
+                  newname = newname.trim();
+                }
               }
             }
           }
