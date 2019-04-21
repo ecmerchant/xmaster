@@ -53,13 +53,16 @@ class ItemsController < ApplicationController
                 #商品が出品中の場合
                 title = doc.xpath('//h1[@class="ProductTitle__text"]').text.gsub("\n","")
                 productinfo = doc.xpath('//li[@class="ProductDetail__item"]')
-
+                condition = /<th class="ProductTable__th">状態<\/th>([\s\S]*?)\/li>/.match(html)
+                if condition != nil then
+                  condition = condition[1]
+                  condition = /<li class="ProductTable__item">([\s\S]*?)</.match(condition)[1]
+                  condition = condition.gsub(/\R/, "")
+                  condition = condition.strip
+                end
                 k = 0
                 while k < productinfo.length
                   str = productinfo[k].text
-                  if str.include?("状態") == true then
-                    condition = productinfo[k].inner_html.match(/pan>([\s\S]*?)</)[1]
-                  end
                   if str.include?("オークションID") == true then
                     auctionID = productinfo[k].inner_html.match(/pan>([\s\S]*?)<\/dd/)[1]
                   end
@@ -128,6 +131,8 @@ class ItemsController < ApplicationController
                 condition = doc.xpath('//td[@property="auction:ItemStatus"]')[0]
                 if condition != nil then
                   condition = condition.text
+                  condition = condition.gsub(/\R/, "")
+                  condition = condition.strip
                 end
 
                 binPrice = ""
